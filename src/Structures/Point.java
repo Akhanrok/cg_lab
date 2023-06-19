@@ -15,6 +15,10 @@ public class Point {
         return new Vector(this.x + p.x, this.y + p.y, this.z + p.z);
     }
 
+    public Point add(Vector v) {
+        return new Point(this.x + v.x, this.y + v.y, this.z + v.z);
+    }
+
     public Vector subtract(Point p) {
         return new Vector(this.x - p.x, this.y - p.y, this.z - p.z);
     }
