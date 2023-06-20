@@ -13,7 +13,7 @@ public class Sphere {
         this.radius = radius;
     }
 
-    public Point[] intersect(Ray ray) {
+    public Point[] intersectSphere(Ray ray) {
         Point orig = ray.origin;
         Vector dir = ray.direction;
 

@@ -16,7 +16,7 @@ public class SphereIntersectionTest {
         Vector rayDirection = new Vector(0, 0, 1);
         Ray ray = new Ray(rayOrigin, rayDirection);
 
-        Point[] intersectionPoints = sphere.intersect(ray);
+        Point[] intersectionPoints = sphere.intersectSphere(ray);
 
         if (intersectionPoints.length > 0) {
             for (Point intersectionPoint : intersectionPoints) {
@@ -35,7 +35,7 @@ public class SphereIntersectionTest {
         Vector rayDirection2 = new Vector(0, 0, 1);
         Ray ray2 = new Ray(rayOrigin2, rayDirection2);
 
-        Point[] intersectionPoints2 = sphere2.intersect(ray2);
+        Point[] intersectionPoints2 = sphere2.intersectSphere(ray2);
 
         if (intersectionPoints2.length > 0) {
             for (Point intersectionPoint : intersectionPoints2) {

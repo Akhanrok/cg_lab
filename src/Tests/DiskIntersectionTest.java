@@ -75,8 +75,3 @@ public class DiskIntersectionTest {
         testDiskIntersection();
     }
 }
-
-
-
-
-
