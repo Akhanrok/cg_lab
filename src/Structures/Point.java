@@ -22,4 +22,8 @@ public class Point {
     public Vector subtract(Point p) {
         return new Vector(this.x - p.x, this.y - p.y, this.z - p.z);
     }
+
+    public Point multiply(float scalar) {
+        return new Point(x * scalar, y * scalar, z * scalar);
+    }
 }

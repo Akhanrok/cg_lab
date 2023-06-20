@@ -18,8 +18,8 @@ public class Triangle {
         Vector orig = new Vector(ray.origin.x, ray.origin.y, ray.origin.z);
         Vector dir = new Vector(ray.direction.x, ray.direction.y, ray.direction.z);
 
-        Vector v0v1 = new Vector(v1.x - v0.x, v1.y - v0.y, v1.z - v0.z);
-        Vector v0v2 = new Vector(v2.x - v0.x, v2.y - v0.y, v2.z - v0.z);
+        Vector v0v1 = v1.subtract(v0);
+        Vector v0v2 = v2.subtract(v0);
         Vector N = v0v1.crossProduct(v0v2);
 
         float NdotRayDirection = (float) N.dotProduct(dir);
@@ -38,22 +38,22 @@ public class Triangle {
 
         Vector C;
 
-        Vector edge0 = new Vector(v1.x - v0.x, v1.y - v0.y, v1.z - v0.z);
-        Vector vp0 = new Vector(P.x - v0.x, P.y - v0.y, P.z - v0.z);
+        Vector edge0 = v1.subtract(v0);
+        Vector vp0 = P.subtract(v0);
         C = edge0.crossProduct(vp0);
         if (N.dotProduct(C) < 0) {
             return null;
         }
 
-        Vector edge1 = new Vector(v2.x - v1.x, v2.y - v1.y, v2.z - v1.z);
-        Vector vp1 = new Vector(P.x - v1.x, P.y - v1.y, P.z - v1.z);
+        Vector edge1 = v2.subtract(v1);
+        Vector vp1 = P.subtract(v1);
         C = edge1.crossProduct(vp1);
         if (N.dotProduct(C) < 0) {
             return null;
         }
 
-        Vector edge2 = new Vector(v0.x - v2.x, v0.y - v2.y, v0.z - v2.z);
-        Vector vp2 = new Vector(P.x - v2.x, P.y - v2.y, P.z - v2.z);
+        Vector edge2 = v0.subtract(v2);
+        Vector vp2 = P.subtract(v2);
         C = edge2.crossProduct(vp2);
         if (N.dotProduct(C) < 0) {
             return null;
