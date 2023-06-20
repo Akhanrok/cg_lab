@@ -20,12 +20,8 @@ public class Disk {
         Plane plane = new Plane(center, normal);
         float t = plane.intersectPlane(ray);
 
-        if (t == Float.POSITIVE_INFINITY) {
-            // Немає точки перетину з площиною - промінь паралельний до площини
+        if (t == Float.POSITIVE_INFINITY || t <= 0) { // Немає точки перетину з площиною
             return Float.POSITIVE_INFINITY;
-        } else if (t == 0) {
-            // Немає точки перетину з площиною  - промінь належить площині
-            return 0;
         }
 
         // Обчислення точки перетину
@@ -34,11 +30,9 @@ public class Disk {
         Vector centerToIntersection = intersectionPoint.subtract(center);
         float distanceToCenter = (float) centerToIntersection.length();
 
-        if (distanceToCenter <= radius) {
-            // Точка перетину належить диску
+        if (distanceToCenter <= radius) { // Точка перетину належить диску
             return t;
-        } else {
-            // Точка перетину лежить поза межами диску
+        } else { // Точка перетину лежить поза межами диску
             return 0;
         }
     }
