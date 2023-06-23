@@ -1,10 +1,10 @@
 package Objects;
 
-import Structures.Point;
 import Structures.Ray;
+import Structures.Point;
 import Structures.Vector;
 
-public class Plane {
+public class Plane implements Intersectable {
     private Point point;
     private Vector normal;
 
@@ -13,22 +13,28 @@ public class Plane {
         this.normal = normal.normalize();
     }
 
-    public float intersectPlane(Ray ray) {
-        Vector rayDirection = ray.direction.normalize();
+    @Override
+    public Point[] intersect(Ray ray) {
+        Vector rayDir = ray.direction.normalize();
 
-        float denominator = (float) normal.dotProduct(rayDirection);
-        if (denominator == 0) { // Немає точки перетину - промінь паралельний до площини
-            return Float.POSITIVE_INFINITY;
+        double t = (point.subtract(ray.origin).dotProduct(normal)) / rayDir.dotProduct(normal);
+
+        if (t >= 0) {
+            Point intersectionPoint = ray.origin.add(rayDir.multiply((float) t));
+
+            Vector pointToPlane = intersectionPoint.subtract(point);
+            double distance = pointToPlane.dotProduct(normal);
+
+            if (Math.abs(distance) < 1e-6) {
+                return new Point[] { intersectionPoint };
+            }
         }
 
-        Vector pointToRayOrigin = ray.origin.subtract(point);
-        float numerator = (float) normal.dotProduct(pointToRayOrigin);
+        return null;
+    }
 
-        float t = -numerator / denominator;
-        if (t < 0) { // Немає точки перетину - промінь належить площині
-            return 0;
-        }
-
-        return t;
+    @Override
+    public Vector getNormal(Point point) {
+        return normal;
     }
 }

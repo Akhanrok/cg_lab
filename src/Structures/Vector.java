@@ -15,10 +15,6 @@ public class Vector {
         return new Vector(this.x + v.x, this.y + v.y, this.z + v.z);
     }
 
-    public Vector subtract(Vector v) {
-        return new Vector(this.x - v.x, this.y - v.y, this.z - v.z);
-    }
-
     public Vector multiply(float scalar) {
         return new Vector(this.x * scalar, this.y * scalar, this.z * scalar);
     }

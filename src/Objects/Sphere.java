@@ -1,10 +1,10 @@
 package Objects;
 
-import Structures.Point;
 import Structures.Ray;
+import Structures.Point;
 import Structures.Vector;
 
-public class Sphere {
+public class Sphere implements Intersectable {
     private Point center;
     private float radius;
 
@@ -13,54 +13,44 @@ public class Sphere {
         this.radius = radius;
     }
 
-    public Point[] intersectSphere(Ray ray) {
-        Point orig = ray.origin;
-        Vector dir = ray.direction;
+    @Override
+    public Point[] intersect(Ray ray) {
+        Vector rayDir = ray.direction.normalize();
+        Vector sphereToRay = ray.origin.subtract(center);
 
-        float[] tValues = solveQuadratic(orig, dir);
-        if (tValues == null) {
-            return new Point[0]; // Немає точки перетину
-        }
+        float a = (float) rayDir.dotProduct(rayDir);
+        float b = (float) (2 * rayDir.dotProduct(sphereToRay));
+        float c = (float) (sphereToRay.dotProduct(sphereToRay) - radius * radius);
 
-        float t0 = tValues[0];
-        float t1 = tValues[1];
+        float discriminant = b * b - 4 * a * c;
+        if (discriminant >= 0) {
+            float sqrtDiscriminant = (float) Math.sqrt(discriminant);
+            float t1 = (-b + sqrtDiscriminant) / (2 * a);
+            float t2 = (-b - sqrtDiscriminant) / (2 * a);
 
-        if (t0 > t1) {
-            float temp = t0;
-            t0 = t1;
-            t1 = temp;
-        }
+            if (t1 >= 0 || t2 >= 0) {
+                Point[] intersectionPoints = new Point[t1 >= 0 && t2 >= 0 ? 2 : 1];
 
-        if (t0 < 0) {
-            t0 = t1;
-            if (t0 < 0) {
-                return new Point[0]; // Немає точки перетину
+                int index = 0;
+                if (t1 >= 0) {
+                    Point intersectionPoint1 = ray.origin.add(rayDir.multiply(t1));
+                    intersectionPoints[index++] = intersectionPoint1;
+                }
+                if (t2 >= 0) {
+                    Point intersectionPoint2 = ray.origin.add(rayDir.multiply(t2));
+                    intersectionPoints[index] = intersectionPoint2;
+                }
+
+                return intersectionPoints;
             }
         }
 
-        Point intersectionPoint1 = orig.add(dir.multiply(t0));
-        Point intersectionPoint2 = orig.add(dir.multiply(t1));
-
-        return new Point[]{intersectionPoint1, intersectionPoint2};
+        return null;
     }
 
-    private float[] solveQuadratic(Point orig, Vector dir) {
-        Vector L = orig.subtract(center); // Вектор з точки початку променя до центру сфери
-        float a = (float) dir.dotProduct(dir);
-        float b = (float) (2 * dir.dotProduct(L));
-        float c = (float) (L.dotProduct(L) - radius * radius);
 
-        float discr = b * b - 4 * a * c;
-        if (discr < 0) {
-            return null; // Немає розв'язків
-        }
-
-        float sqrtDiscr = (float) Math.sqrt(discr);
-        float q = (b > 0) ? -0.5f * (b + sqrtDiscr) : -0.5f * (b - sqrtDiscr);
-
-        float t0 = q / a;
-        float t1 = c / q;
-
-        return new float[]{t0, t1};
+    @Override
+    public Vector getNormal(Point point) {
+        return point.subtract(center).normalize();
     }
 }

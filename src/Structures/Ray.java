@@ -8,5 +8,9 @@ public class Ray {
         this.origin = origin;
         this.direction = direction;
     }
+
+    public Point getOrigin() {
+        return origin;
+    }
 }
 

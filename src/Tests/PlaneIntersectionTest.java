@@ -20,13 +20,13 @@ public class PlaneIntersectionTest {
         Vector[] planeNormals = {
                 new Vector(0, 0, 1),
                 new Vector(0, 1, 0),
-                new Vector(0, 0, 1)
+                new Vector(0, 1, 0)
         };
 
         Point[] rayOrigins = {
                 new Point(1, 1, -1),
                 new Point(1, 1, 1),
-                new Point(1, 1, 0)
+                new Point(0, 0, 0)
         };
 
         Vector[] rayDirections = {
@@ -38,15 +38,15 @@ public class PlaneIntersectionTest {
         for (int i = 0; i < 3; i++) {
             Plane plane = new Plane(planePoints[i], planeNormals[i]);
             Ray ray = new Ray(rayOrigins[i], rayDirections[i]);
-            float t = plane.intersectPlane(ray);
+            Point[] intersectionPoints = plane.intersect(ray);
 
-            if (t == Float.POSITIVE_INFINITY) {
-                System.out.println("No intersection. Ray is parallel to the plane");
-            } else if (t == 0) {
-                System.out.println("No intersection. Ray lies within the plane");
+            if (intersectionPoints != null) {
+                System.out.println("Intersection point for Plane " + (i+1) + ":");
+                for (Point intersectionPoint : intersectionPoints) {
+                    System.out.println("(" + intersectionPoint.x + ", " + intersectionPoint.y + ", " + intersectionPoint.z + ")");
+                }
             } else {
-                Point intersectionPoint = rayOrigins[i].add(rayDirections[i].multiply(t));
-                System.out.println("Intersection point: (" + intersectionPoint.x + ", " + intersectionPoint.y + ", " + intersectionPoint.z + ")");
+                System.out.println("No intersection point for Plane " + (i+1));
             }
         }
     }

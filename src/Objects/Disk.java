@@ -1,10 +1,10 @@
 package Objects;
 
-import Structures.Point;
 import Structures.Ray;
+import Structures.Point;
 import Structures.Vector;
 
-public class Disk {
+public class Disk implements Intersectable {
     private Point center;
     private Vector normal;
     private float radius;
@@ -15,26 +15,33 @@ public class Disk {
         this.radius = radius;
     }
 
-    public float intersectDisk(Ray ray) {
-        // Перетин променем площини, якій належить диск
-        Plane plane = new Plane(center, normal);
-        float t = plane.intersectPlane(ray);
+    @Override
+    public Point[] intersect(Ray ray) {
+        Vector rayDir = ray.direction.normalize();
+        double t = (center.subtract(ray.origin).dotProduct(normal)) / rayDir.dotProduct(normal);
 
-        if (t == Float.POSITIVE_INFINITY || t <= 0) { // Немає точки перетину з площиною
-            return Float.POSITIVE_INFINITY;
+        if (t >= 0) {
+            Point intersectionPoint = ray.origin.add(rayDir.multiply((float) t));
+            Vector v = intersectionPoint.subtract(center);
+            float distanceSquared = (float) v.dotProduct(v);
+            if (distanceSquared <= radius * radius) {
+                if (isPointOnDisk(intersectionPoint)) {
+                    return new Point[] { intersectionPoint };
+                }
+            }
         }
 
-        // Обчислення точки перетину
-        Point intersectionPoint = ray.origin.add(ray.direction.multiply(t));
-        // Обчислення відстані до центру диска
-        Vector centerToIntersection = intersectionPoint.subtract(center);
-        float distanceToCenter = (float) centerToIntersection.length();
+        return null;
+    }
 
-        if (distanceToCenter <= radius) { // Точка перетину належить диску
-            return t;
-        } else { // Точка перетину лежить поза межами диску
-            return 0;
-        }
+    private boolean isPointOnDisk(Point point) {
+        Vector pointToCenter = center.subtract(point);
+        double distance = pointToCenter.dotProduct(normal);
+        return Math.abs(distance) < 1e-6;
+    }
+
+    @Override
+    public Vector getNormal(Point point) {
+        return normal;
     }
 }
-

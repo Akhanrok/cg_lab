@@ -1,48 +1,46 @@
 package Tests;
 
 import Objects.Sphere;
-import Structures.Point;
-import Structures.Ray;
-import Structures.Vector;
+import Structures.*;
+
+// Випадок 1: промінь перетинає сферу
+// Випадок 2: промінь не перетинає сферу
 
 public class SphereIntersectionTest {
     public static void testSphereIntersection() {
-        // Випадок 1: промінь перетинає сферу
-        Point center = new Point(0, 0, 0);
-        float radius = 1;
-        Sphere sphere = new Sphere(center, radius);
+        Point[] sphereCenters = {
+                new Point(0, 0, 0),
+                new Point(0, 0, 0)
+        };
 
-        Point rayOrigin = new Point(0, 0, -2);
-        Vector rayDirection = new Vector(0, 0, 1);
-        Ray ray = new Ray(rayOrigin, rayDirection);
+        float[] sphereRadii = {
+                1,
+                1.5f
+        };
 
-        Point[] intersectionPoints = sphere.intersectSphere(ray);
+        Point[] rayOrigins = {
+                new Point(0, 0, -2),
+                new Point(0, 2, -2)
+        };
 
-        if (intersectionPoints.length > 0) {
-            for (Point intersectionPoint : intersectionPoints) {
-                System.out.println("Intersection point: (" + intersectionPoint.x + ", " + intersectionPoint.y + ", " + intersectionPoint.z + ")");
+        Vector[] rayDirections = {
+                new Vector(0, 0, 1),
+                new Vector(0, 0, 1)
+        };
+
+        for (int i = 0; i < 2; i++) {
+            Sphere sphere = new Sphere(sphereCenters[i], sphereRadii[i]);
+            Ray ray = new Ray(rayOrigins[i], rayDirections[i]);
+            Point[] intersectionPoints = sphere.intersect(ray);
+
+            if (intersectionPoints != null && intersectionPoints.length > 0) {
+                System.out.println("Intersection points for Sphere " + (i+1) + ":");
+                for (Point intersectionPoint : intersectionPoints) {
+                    System.out.println("(" + intersectionPoint.x + ", " + intersectionPoint.y + ", " + intersectionPoint.z + ")");
+                }
+            } else {
+                System.out.println("No intersection points for Sphere " + (i+1));
             }
-        } else {
-            System.out.println("No intersection");
-        }
-
-        // Випадок 2: промінь не перетинає сферу
-        Point center2 = new Point(0, 0, 0);
-        float radius2 = 1;
-        Sphere sphere2 = new Sphere(center2, radius2);
-
-        Point rayOrigin2 = new Point(0, 2, -2);
-        Vector rayDirection2 = new Vector(0, 0, 1);
-        Ray ray2 = new Ray(rayOrigin2, rayDirection2);
-
-        Point[] intersectionPoints2 = sphere2.intersectSphere(ray2);
-
-        if (intersectionPoints2.length > 0) {
-            for (Point intersectionPoint : intersectionPoints2) {
-                System.out.println("Intersection point: (" + intersectionPoint.x + ", " + intersectionPoint.y + ", " + intersectionPoint.z + ")");
-            }
-        } else {
-            System.out.println("No intersection");
         }
     }
 
@@ -50,4 +48,3 @@ public class SphereIntersectionTest {
         testSphereIntersection();
     }
 }
-

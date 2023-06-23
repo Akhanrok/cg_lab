@@ -1,41 +1,51 @@
 package Tests;
 
 import Objects.Triangle;
-import Structures.Point;
-import Structures.Ray;
-import Structures.Vector;
+import Structures.*;
+
+// Випадок 1: промінь перетинає трикутник
+// Випадок 2: промінь не перетинає трикутник
 
 public class TriangleIntersectionTest {
     public static void testTriangleIntersection() {
-        Point v0 = new Point(0f, 0f, 0f);
-        Point v1 = new Point(1f, 0f, 0f);
-        Point v2 = new Point(0f, 1f, 0f);
-        Triangle triangle = new Triangle(v0, v1, v2);
+        Point[] vertex0 = {
+                new Point(0, 0, 0),
+                new Point(0, 0, 0)
+        };
 
-        // Випадок 1: промінь перетинає трикутник
-        Point rayOrigin1 = new Point(0.5f, 0.5f, -1f);
-        Vector rayDirection1 = new Vector(0f, 0f, 1f);
-        Ray ray = new Ray(rayOrigin1, rayDirection1);
+        Point[] vertex1 = {
+                new Point(1, 0, 0),
+                new Point(1, 0, 0)
+        };
 
-        Point intersectionPoint1 = triangle.intersectTriangle(ray);
+        Point[] vertex2 = {
+                new Point(0, 1, 0),
+                new Point(0, 1, 0)
+        };
 
-        if (intersectionPoint1 != null) {
-            System.out.println("Intersection point: (" + intersectionPoint1.x + ", " + intersectionPoint1.y + ", " + intersectionPoint1.z + ")");
-        } else {
-            System.out.println("No intersection");
-        }
+        Point[] rayOrigins = {
+                new Point(0.5f, 0.5f, -1),
+                new Point(1, 1, -1)
+        };
 
-        // Випадок 2: промінь не перетинає трикутник
-        Point rayOrigin2 = new Point(1f, 1f, -1f);
-        Vector rayDirection2 = new Vector(0f, 0f, 1f);
-        Ray ray2 = new Ray(rayOrigin2, rayDirection2);
+        Vector[] rayDirections = {
+                new Vector(0, 0, 1),
+                new Vector(0, 0, 1)
+        };
 
-        Point intersectionPoint2 = triangle.intersectTriangle(ray2);
+        for (int i = 0; i < 2; i++) {
+            Triangle triangle = new Triangle(vertex0[i], vertex1[i], vertex2[i]);
+            Ray ray = new Ray(rayOrigins[i], rayDirections[i]);
+            Point[] intersectionPoints = triangle.intersect(ray);
 
-        if (intersectionPoint2 != null) {
-            System.out.println("Intersection point: (" + intersectionPoint2.x + ", " + intersectionPoint2.y + ", " + intersectionPoint2.z + ")");
-        } else {
-            System.out.println("No intersection");
+            if (intersectionPoints != null) {
+                System.out.println("Intersection point for Triangle " + (i+1) + ":");
+                for (Point intersectionPoint : intersectionPoints) {
+                    System.out.println("(" + intersectionPoint.x + ", " + intersectionPoint.y + ", " + intersectionPoint.z + ")");
+                }
+            } else {
+                System.out.println("No intersection point for Triangle " + (i+1));
+            }
         }
     }
 
@@ -43,4 +53,3 @@ public class TriangleIntersectionTest {
         testTriangleIntersection();
     }
 }
-
