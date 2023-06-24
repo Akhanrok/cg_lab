@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 
 public class PpmImageReader implements ImageReader {
-    private static final Pattern PATTERN_COMMENT = Pattern.compile("#.*");
     private static final Pattern PATTERN_SIZE = Pattern.compile("(\\d+)\\s+(\\d+)");
 
     @Override
@@ -27,31 +26,28 @@ public class PpmImageReader implements ImageReader {
                 throw new ImageFormatException("Invalid image size");
             }
             String[] sizeTokens = sizeLine.split("\\s+");
+
+            String colorMaxLine = reader.readLine().trim();
+            int colorMax = Integer.parseInt(colorMaxLine);
+
             int width = Integer.parseInt(sizeTokens[0]);
             int height = Integer.parseInt(sizeTokens[1]);
-
             int[][][] pixels = new int[height][width][3];
 
-            int pixelCount = width * height;
-            int currentPixel = 0;
-            String line;
-            while ((line = reader.readLine()) != null && currentPixel < pixelCount) {
-                line = PATTERN_COMMENT.matcher(line).replaceAll("").trim();
-
-                if (line.isEmpty()) {
-                    continue;
-                }
-
+            int red, green, blue;
+            for (int y = 0; y < height; y++) {
+                String line = reader.readLine().trim();
                 String[] colorTokens = line.split("\\s+");
+                for (int x = 0; x < width; x++) {
+                    red = Integer.parseInt(colorTokens[3 * x]);
+                    green = Integer.parseInt(colorTokens[3 * x + 1]);
+                    blue = Integer.parseInt(colorTokens[3 * x + 2]);
 
-                int red = Integer.parseInt(colorTokens[0]);
-                int green = Integer.parseInt(colorTokens[1]);
-                int blue = Integer.parseInt(colorTokens[2]);
-                pixels[currentPixel / width][currentPixel % width][0] = red;
-                pixels[currentPixel / width][currentPixel % width][1] = green;
-                pixels[currentPixel / width][currentPixel % width][2] = blue;
-
-                currentPixel++;
+                    // Normalize the pixel values based on the maximum color value
+                    pixels[y][x][0] = (int) ((red / (double) colorMax) * 255);
+                    pixels[y][x][1] = (int) ((green / (double) colorMax) * 255);
+                    pixels[y][x][2] = (int) ((blue / (double) colorMax) * 255);
+                }
             }
 
             return pixels;

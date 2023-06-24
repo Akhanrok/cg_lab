@@ -25,12 +25,11 @@ public class PpmImageWriter implements ImageWriter {
             writer.write("255");
             writer.newLine();
 
-            int y;
-            for (y = 0; y < height; y++) {
+            for (int[][] pixel : pixels) {
                 for (int x = 0; x < width; x++) {
-                    int red = pixels[y][x][0];
-                    int green = pixels[y][x][1];
-                    int blue = pixels[y][x][2];
+                    int red = pixel[x][0];
+                    int green = pixel[x][1];
+                    int blue = pixel[x][2];
                     writer.write(red + " " + green + " " + blue + " ");
                 }
                 writer.newLine();
