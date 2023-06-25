@@ -1,10 +1,10 @@
 package ImageConverterTests;
 
-import ImageConverter.*;
+        import ImageConverter.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+        import java.util.HashMap;
+        import java.util.Map;
+        import java.util.Scanner;
 
 public class ImageConverterTest {
     public static void main(String[] args) {
@@ -42,7 +42,7 @@ public class ImageConverterTest {
         }
 
         try {
-            if (outputExtension.equals("gif")) {
+            if (inputExtension.equals("gif")) {
                 System.out.println("Conversion of GIF images is not implemented.");
                 return;
             }
