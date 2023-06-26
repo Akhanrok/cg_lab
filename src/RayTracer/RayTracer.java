@@ -1,11 +1,7 @@
 package RayTracer;
 
-import Objects.Intersectable;
-import Structures.Camera;
-import Structures.LightSource;
-import Structures.Point;
-import Structures.Ray;
-import Structures.Vector;
+import Objects.*;
+import Structures.*;
 
 public class RayTracer {
     private int width;
@@ -13,6 +9,7 @@ public class RayTracer {
     private Camera camera;
     private Intersectable[] objects;
     private LightSource light;
+    private char[][] pixels;
 
     public RayTracer(int width, int height, Camera camera, Intersectable[] objects, LightSource light) {
         this.width = width;
@@ -20,6 +17,17 @@ public class RayTracer {
         this.camera = camera;
         this.objects = objects;
         this.light = light;
+        this.pixels = new char[height][width];
+    }
+
+    public void render() {
+        for (int y = height - 1; y >= 0; y--) {
+            for (int x = 0; x < width; x++) {
+                Ray ray = generateRay(x, y);
+                char symbol = traceRay(ray);
+                pixels[y][x] = symbol;
+            }
+        }
     }
 
     public void renderToConsole() {
@@ -27,10 +35,15 @@ public class RayTracer {
             for (int x = 0; x < width; x++) {
                 Ray ray = generateRay(x, y);
                 char symbol = traceRay(ray);
+                pixels[y][x] = symbol;
                 System.out.print(symbol + "  ");
             }
             System.out.println();
         }
+    }
+
+    public char[][] getPixels() {
+        return pixels;
     }
 
     private Ray generateRay(int x, int y) {
