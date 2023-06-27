@@ -12,9 +12,11 @@ import java.util.Scanner;
 public class ModelVisualizerConsoleTest {
     public static void main(String[] args) {
         Camera camera = new Camera(new Point(1, 0, -12), new Vector(0, 0, 1), new Vector(1, 0, 0), new Vector(0, 1, 0));
-        LightSource light = new LightSource(new Vector(1, -1, -1).normalize());
-        int width = 80;
-        int height = 60;
+        LightSource light = new LightSource(new Point(1, 0, -1), new Vector(1, -1, -1).normalize());
+
+
+        int width = 30;
+        int height = 20;
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter the input filename:");

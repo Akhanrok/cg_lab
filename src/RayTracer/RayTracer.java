@@ -85,23 +85,62 @@ public class RayTracer {
         return ' ';
     }
 
+
     private char shadePixel(Ray ray, Point intersectionPoint, Intersectable object) {
         Vector normal = object.getNormal(intersectionPoint);
         Vector lightDirection = light.getDirection().normalize();
 
-        float intensity = (float) normal.dotProduct(lightDirection);
-        intensity = Math.max(intensity, 0);
+        Ray shadowRay = new Ray(intersectionPoint, lightDirection);
+        Point shadowIntersection = findNearestIntersection(shadowRay);
 
-        if (intensity < 0) {
-            return ' ';
-        } else if (intensity < 0.2) {
-            return '.';
-        } else if (intensity < 0.5) {
-            return '*';
-        } else if (intensity < 0.8) {
-            return 'O';
+        if (shadowIntersection != null && shadowIntersection.getDistance(intersectionPoint) < light.getPosition().getDistance(intersectionPoint)) {
+            return '-';
         } else {
-            return '#';
+            float intensity = (float) normal.dotProduct(lightDirection);
+            intensity = Math.max(intensity, 0);
+
+            if (intensity < 0) {
+                return ' ';
+            } else if (intensity < 0.2) {
+                return '.';
+            } else if (intensity < 0.5) {
+                return '*';
+            } else if (intensity < 0.8) {
+                return 'O';
+            } else {
+                return '#';
+            }
         }
+    }
+
+    private Point findNearestIntersection(Ray ray) {
+        Point nearestIntersection = null;
+
+        for (Intersectable object : objects) {
+            Point[] intersectionPoints = object.intersect(ray);
+
+            if (intersectionPoints != null) {
+                for (Point intersection : intersectionPoints) {
+                    if (nearestIntersection == null || intersection.getDistance(ray.getOrigin()) < nearestIntersection.getDistance(ray.getOrigin())) {
+                        nearestIntersection = intersection;
+                    }
+                }
+            }
+        }
+
+        return nearestIntersection;
+    }
+
+
+    private boolean isPointInShadow(Ray shadowRay) {
+        for (Intersectable object : objects) {
+            Point[] intersectionPoints = object.intersect(shadowRay);
+
+            if (intersectionPoints != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

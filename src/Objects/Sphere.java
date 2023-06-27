@@ -48,6 +48,13 @@ public class Sphere implements Intersectable {
         return null;
     }
 
+    public Point getCenter() {
+        return center;
+    }
+
+    public float getRadius() {
+        return radius;
+    }
 
     @Override
     public Vector getNormal(Point point) {
